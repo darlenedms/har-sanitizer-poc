@@ -19,7 +19,11 @@
             "load",
             () => {
                 var originalContent = reader.result;
-                var sanitized = originalContent.replace(/Bearer (.+)/g, '"');
+                var myRegex = /(Bearer )(.+)/g;
+                var regexGroups = myRegex.exec(originalContent);
+                var token = regexGroups[2].replace('"', '');
+
+                var sanitized = originalContent.replaceAll(token, '');
 
                 const blob = new Blob([sanitized], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
@@ -34,7 +38,6 @@
 
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-
             },
             false,
         );
